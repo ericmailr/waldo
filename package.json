@@ -1,5 +1,8 @@
 {
   "name": "waldo",
   "private": true,
-  "dependencies": {}
+  "dependencies": {},
+  "devDependencies": {
+    "webpack-cli": "^3.3.10"
+  }
 }

@@ -10,5 +10,30 @@
 
   <body>
     <%= yield %>
+    <ul id='menu'>
+      <li id='keyOption'>
+        <ul class='menuOptions'>
+          <li id='toggleKeyLabel'>Show Key</li>
+          <li id='key'><img src='assets/key.jpg'></li>
+          <li></li>
+        </ul>
+      </li>
+      <li id='sceneOption'>
+        <ul class='menuOptions'>
+          <li id='chooseSceneLabel'>Choose Scene</li>
+          <li>
+            <ul id ='menuScenes'>
+              <li id='scene1'><img src='assets/waldo1.jpg'></li>
+              <li id='scene2'><img src='assets/waldo2.jpg'></li>
+              <li id='scene3'><img src='assets/waldo3.jpg'></li>
+            </ul> 
+          </li>
+        </ul>
+      </li>
+    </ul>
+    <div id='container'>
+      <div id='circle'><div><div></div></div></div>
+      <img id='scene' src='assets/waldo1.jpg'>
+    </div>
   </body>
 </html>
