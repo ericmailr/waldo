@@ -11,7 +11,7 @@ const init = () => {
     const containerEl = document.getElementById('container');
     const keyLabelEl = document.getElementById('toggleKeyLabel');
     const sceneEl = document.getElementById('scene');
-    const keyEl = document.getElementById('key');
+    const keyContainerEl = document.getElementById('keyContainer');
     const keyOptionEl = document.getElementById('keyOption');
     const toggleKeyLabelEl = document.getElementById('toggleKeyLabel');
     const sceneOptionEl = document.getElementById('sceneOption');
@@ -20,8 +20,8 @@ const init = () => {
     const identifyEl = document.getElementById('identify');
     const charactersEl = document.getElementById('characters');
 
-    containerEl.style.paddingTop = keyLabelEl.clientHeight + 'px';
-    keyEl.style.display = 'none';
+    containerEl.style.marginTop = keyLabelEl.clientHeight + 'px';
+    keyContainerEl.style.display = 'none';
     menuScenesEl.style.display = 'none';
 
     let currentX = 0;
@@ -56,11 +56,11 @@ const init = () => {
     })
 
     const toggleKeyHandler = () => {
-        if (keyEl.style.display === 'none') {
-            keyEl.style.display = 'flex';
+        if (keyContainerEl.style.display === 'none') {
+            keyContainerEl.style.display = 'flex';
             toggleKeyLabelEl.innerHTML = 'Hide Key';
         } else {
-            keyEl.style.display = 'none';
+            keyContainerEl.style.display = 'none';
             toggleKeyLabelEl.innerHTML = 'Show Key';
         }
     }
@@ -73,14 +73,68 @@ const init = () => {
         }
     }
 
-    sceneOptionEl.addEventListener('click', toggleScenesHandler)
-    keyOptionEl.addEventListener('click', toggleKeyHandler) 
+    const markKey = (character) => {
+        keyContainerEl.insertAdjacentHTML('beforeend',`<img class='checks' src='assets/check.png'>`);
+        switch(character) {
+            case 'Waldo': 
+                keyContainerEl.lastChild.style.top = '265px';
+                keyContainerEl.lastChild.style.left = '485px';
+            break;
+            case 'Wenda':
+                keyContainerEl.lastChild.style.top = '260px';
+                keyContainerEl.lastChild.style.left = '50px';
+            break;
+            case 'Woof':
+                keyContainerEl.lastChild.style.top = '260px';
+                keyContainerEl.lastChild.style.left = '50px';
+            break;
+            case 'Odlaw':
+                keyContainerEl.lastChild.style.top = '260px';
+                keyContainerEl.lastChild.style.left = '50px';
+            break;
+            case 'Whitebeard':
+                keyContainerEl.lastChild.style.top = '260px';
+                keyContainerEl.lastChild.style.left = '50px';
+            break;
+            case 'Scroll':
+                keyContainerEl.lastChild.style.top = '260px';
+                keyContainerEl.lastChild.style.left = '50px';
+            break;
+            case 'Camera':
+                keyContainerEl.lastChild.style.top = '260px';
+                keyContainerEl.lastChild.style.left = '50px';
+            break;
+            case 'Key':
+                keyContainerEl.lastChild.style.top = '260px';
+                keyContainerEl.lastChild.style.left = '50px';
+            break;
+            case 'Binoculars':
+                keyContainerEl.lastChild.style.top = '260px';
+                keyContainerEl.lastChild.style.left = '50px';
+            break;
+            case 'Bone':
+                keyContainerEl.lastChild.style.top = '260px';
+                keyContainerEl.lastChild.style.left = '50px';
+            break;
+            default:
+                return; 
+        }
+        
+
+
+    }
+
+    sceneOptionEl.addEventListener('click', toggleScenesHandler);
+    keyOptionEl.addEventListener('click', toggleKeyHandler);
     containerEl.addEventListener('click', (e) => {
+        console.log(e.target);
         spottedEl.style.display = 'flex';
         spottedEl.style.top = e.pageY - 55 + 'px';
         spottedEl.style.left = e.pageX - 55 + 'px';
         identifyEl.style.display = 'block';
         charactersEl.style.display = 'none';
+        // hide scene options if opened
+        menuScenesEl.style.display = 'none';
     })
 
     identifyEl.addEventListener('click', (e) => {
@@ -94,8 +148,12 @@ const init = () => {
         e.stopPropagation();
         identifyEl.style.display = 'block';
         charactersEl.style.display = 'none';
+        markKey(e.target.innerHTML);
+        
         console.log(e.target.innerHTML);
         // is it within 30px of e.target.innerHTML
     })
+
+
 
 }
