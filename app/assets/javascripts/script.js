@@ -9,39 +9,73 @@ if( document.readyState !== 'loading' ) {
 
 const init = () => {
     const containerEl = document.getElementById('container');
-    const keyLabelEl = document.getElementById('toggleKeyLabel');
-    const sceneEl = document.getElementById('scene');
-    const keyContainerEl = document.getElementById('keyContainer');
-    const keyOptionEl = document.getElementById('keyOption');
     const toggleKeyLabelEl = document.getElementById('toggleKeyLabel');
-    const sceneOptionEl = document.getElementById('sceneOption');
-    const menuScenesEl = document.getElementById('menuScenes');
+    const chooseSceneLabelEl = document.getElementById('chooseSceneLabel');
+    const sceneEl = document.getElementById('scene');
+    const keyOptionEl = document.getElementById('keyOption');
+    const keyContainerEl = document.getElementById('keyContainer');
+    const scenesEl = document.getElementById('scenes');
     const spottedEl = document.getElementById('spotted');
     const identifyEl = document.getElementById('identify');
-    const charactersEl = document.getElementById('characters');
+    const targetsEl = document.getElementById('targets');
+    const circleEl = document.getElementById('currentCircle');
+    const permCircle = `<div class='circles foundCircles'><div><div></div></div></div>`;
 
-    containerEl.style.marginTop = keyLabelEl.clientHeight + 'px';
-    keyContainerEl.style.display = 'none';
-    menuScenesEl.style.display = 'none';
+    const menuHeight = getComputedStyle(keyOptionEl).height;
+    containerEl.style.marginTop = menuHeight;
 
+    const scene1El = document.getElementById('scene1');
+    const scene2El = document.getElementById('scene2');
+    const scene3El = document.getElementById('scene3');
+
+    const accuracyLeeway = 25;
     let currentX = 0;
     let currentY = 0;
 
-    const scene1El = document.getElementById('scene1');
-    //waldo: 2555 1385
-    //wenda: 3040 475
-    //woof: 1326 1641
-    //odlaw: 3266 1250
-    //wizard whitebeard: 359 1471
-    //scroll: 2908 2071
-    //camera: 780 1481
-    //key: 1101 1478
-    //binoculars: 1538 1933
-    //bone: 2652 974
-    const scene2El = document.getElementById('scene2');
-    //waldo: 2100 665
-    const scene3El = document.getElementById('scene3');
-    //
+    let startTime = new Date();
+    let time = 0;
+    let foundTargets = [];
+
+
+    const toDuration =  (number) => {
+        var sec_num = parseInt(number, 10);
+        var hours   = Math.floor(sec_num / 3600);
+        var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
+        var seconds = sec_num - (hours * 3600) - (minutes * 60);
+
+        if (hours < 10) { hours = "0" + hours; }
+        if (minutes < 10) { minutes = "0"+minutes; }
+        if (seconds < 10) { seconds = "0"+seconds; }
+        if (hours === "00") {
+            return minutes + ':' + seconds;
+        }
+        return hours+ ':' + minutes + ':' + seconds;
+    }
+    
+    const updateTime = () => {
+       time = toDuration(Math.round((new Date() - startTime) / 1000));
+       toggleKeyLabelEl.innerHTML = `Key (${time})`;
+    }
+
+    let startTimer = setInterval(updateTime, 1000);
+
+    const toggleKeyHandler = () => {
+        if (getComputedStyle(keyContainerEl).display === 'none') {
+            keyContainerEl.style.display = 'flex';
+            toggleKeyLabelEl.innerHTML = `Key (${time})`;
+        } else {
+            keyContainerEl.style.display = 'none';
+            toggleKeyLabelEl.innerHTML = `Key (${time})`;
+        }
+    }
+
+    const chooseSceneHandler = () => {
+        if (getComputedStyle(scenesEl).display === 'none') {
+            scenesEl.style.display = 'flex';
+        } else {
+            scenesEl.style.display = 'none';
+        }
+    }
 
     scene1El.addEventListener('click', () => {
         sceneEl.src = 'assets/waldo1.jpg';
@@ -55,105 +89,86 @@ const init = () => {
         sceneEl.src = 'assets/waldo3.jpg';
     })
 
-    const toggleKeyHandler = () => {
-        if (keyContainerEl.style.display === 'none') {
-            keyContainerEl.style.display = 'flex';
-            toggleKeyLabelEl.innerHTML = 'Hide Key';
-        } else {
-            keyContainerEl.style.display = 'none';
-            toggleKeyLabelEl.innerHTML = 'Show Key';
-        }
+    toggleKeyLabelEl.addEventListener('click', toggleKeyHandler);
+    keyContainerEl.addEventListener('click', toggleKeyHandler);
+    chooseSceneLabelEl.addEventListener('click', chooseSceneHandler);
+
+    const scenesElChildren = scenesEl.children;
+    for (var i=0; i < scenesElChildren.length; i++) {
+        scenesElChildren[i].addEventListener('click', () => {
+            chooseSceneHandler();
+            let checks = document.getElementsByClassName('checks');
+            for (let i = 0; i < checks.length; i++) {
+                checks[i].parentElement.removeChild(checks[i]);
+            }
+            let foundCircles = document.getElementsByClassName('foundCircles');
+            for (let i = 0; i < foundCircles.length; i ++) {
+                foundCircles[i].parentElement.removeChild(foundCircles[i]);
+            }
+            foundTargets = [];
+            clearInterval(startTimer);
+            startTime = new Date();
+            startTimer = setInterval(updateTime, 1000);
+        })
     }
 
-    const toggleScenesHandler = () => {
-        if (menuScenesEl.style.display === 'none') {
-            menuScenesEl.style.display = 'flex';
-        } else {
-            menuScenesEl.style.display = 'none';
-        }
-    }
-
-    const markKey = (character) => {
-        keyContainerEl.insertAdjacentHTML('beforeend',`<img class='checks' src='assets/check.png'>`);
-        switch(character) {
-            case 'Waldo': 
-                keyContainerEl.lastChild.style.top = '265px';
-                keyContainerEl.lastChild.style.left = '485px';
-            break;
-            case 'Wenda':
-                keyContainerEl.lastChild.style.top = '260px';
-                keyContainerEl.lastChild.style.left = '50px';
-            break;
-            case 'Woof':
-                keyContainerEl.lastChild.style.top = '260px';
-                keyContainerEl.lastChild.style.left = '50px';
-            break;
-            case 'Odlaw':
-                keyContainerEl.lastChild.style.top = '260px';
-                keyContainerEl.lastChild.style.left = '50px';
-            break;
-            case 'Whitebeard':
-                keyContainerEl.lastChild.style.top = '260px';
-                keyContainerEl.lastChild.style.left = '50px';
-            break;
-            case 'Scroll':
-                keyContainerEl.lastChild.style.top = '260px';
-                keyContainerEl.lastChild.style.left = '50px';
-            break;
-            case 'Camera':
-                keyContainerEl.lastChild.style.top = '260px';
-                keyContainerEl.lastChild.style.left = '50px';
-            break;
-            case 'Key':
-                keyContainerEl.lastChild.style.top = '260px';
-                keyContainerEl.lastChild.style.left = '50px';
-            break;
-            case 'Binoculars':
-                keyContainerEl.lastChild.style.top = '260px';
-                keyContainerEl.lastChild.style.left = '50px';
-            break;
-            case 'Bone':
-                keyContainerEl.lastChild.style.top = '260px';
-                keyContainerEl.lastChild.style.left = '50px';
-            break;
-            default:
-                return; 
-        }
-        
-
-
-    }
-
-    sceneOptionEl.addEventListener('click', toggleScenesHandler);
-    keyOptionEl.addEventListener('click', toggleKeyHandler);
     containerEl.addEventListener('click', (e) => {
-        console.log(e.target);
         spottedEl.style.display = 'flex';
-        spottedEl.style.top = e.pageY - 55 + 'px';
-        spottedEl.style.left = e.pageX - 55 + 'px';
+        spottedEl.style.top = e.pageY - parseInt(menuHeight) - circleEl.offsetHeight / 2 + 'px';
+        spottedEl.style.left = e.pageX - circleEl.offsetWidth / 2 + 'px';
         identifyEl.style.display = 'block';
-        charactersEl.style.display = 'none';
+        targetsEl.style.display = 'none';
+        currentX = e.pageX;
+        currentY = e.pageY;
         // hide scene options if opened
-        menuScenesEl.style.display = 'none';
+        scenesEl.style.display = 'none';
     })
 
     identifyEl.addEventListener('click', (e) => {
         e.stopPropagation();
         identifyEl.style.display = 'none';
-        charactersEl.style.display = 'block';
-        console.log('it worked');
+        targetsEl.style.display = 'block';
     })
 
-    charactersEl.addEventListener('click', (e) => {
+    targetsEl.addEventListener('click', (e) => {
         e.stopPropagation();
         identifyEl.style.display = 'block';
-        charactersEl.style.display = 'none';
-        markKey(e.target.innerHTML);
-        
-        console.log(e.target.innerHTML);
-        // is it within 30px of e.target.innerHTML
+        targetsEl.style.display = 'none';
+        let targetName = e.target.innerHTML;
+        if (!foundTargets.includes(targetName)) {
+        fetch(`/${targetName}.json`)
+            .then(function(response) {
+                return response.json();
+            })
+            .then(function(target) {
+                if(Math.abs(currentX-target.x) < accuracyLeeway && Math.abs(currentY-target.y) < accuracyLeeway) {
+                    foundTargets.push(target.name);
+                    keyContainerEl.insertAdjacentHTML('beforeend',`<img class='checks' src='assets/check.png'>`);
+                    keyContainerEl.lastChild.style.left = target.keyX + 'px';
+                    keyContainerEl.lastChild.style.top = target.keyY + 'px';
+                    containerEl.insertAdjacentHTML('afterbegin', permCircle);
+                    containerEl.firstChild.style.top = spottedEl.style.top;
+                    containerEl.firstChild.style.left = spottedEl.style.left;
+                    if (foundTargets.length === 1) {
+                        toggleKeyLabelEl.innerHTML = `You found them all in ${time}!`;
+                        clearInterval(startTimer);
+                    } else {
+                        toggleKeyLabelEl.innerHTML = `${target.name} found!`;
+                        setTimeout(function(){ toggleKeyLabelEl.innerHTML = `Key (${time})`; }, 3000);
+                    }
+                } else {
+                    toggleKeyLabelEl.innerHTML = target.name === 'Binoculars' ? `${target.name} aren't there. Try again!` : `${target.name} isn't there. Try again!`;
+                    clearInterval(startTimer);
+                    setTimeout( () => {
+                        startTimer = setInterval(updateTime, 1000);
+                        updateTime();
+                        toggleKeyLabelEl.innerHTML = `Key (${time})`; 
+                    }, 3000);
+                }
+            });
+        } else {
+            toggleKeyLabelEl.innerHTML = ['Waldo','Wenda','Woof','Odlaw','Whitebeard'].includes(targetName) ? `You already found ${targetName}!` : `You already found the ${targetName}`;
+            setTimeout(function(){ toggleKeyLabelEl.innerHTML = `Key (${time})`; }, 3000);
+        }
     })
-
-
-
 }

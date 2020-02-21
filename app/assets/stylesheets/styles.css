@@ -2,6 +2,7 @@
     margin: 0;
     padding: 0;
 }
+
  body {
     display: flex;
     flex-direction: column;
@@ -25,83 +26,71 @@
  /* menu */
 
  #menu {
+    width: 100%;
+    color: white;
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    display: flex;
-    align-items: flex-start;
     z-index: 2;
+    background-color: black;
  }
 
- #menu > li {
-     background-color: black;
- }
-
- .menuOptions {
-     color: white;
+ #menu > ul {
      display: flex;
-     flex-direction: column;
- }
-
- #toggleKeyLabel, #chooseSceneLabel {
-     padding: 10px;
-     display: flex;
-     justify-content: center;
-     align-items: center;
  }
 
  #keyOption {
      flex: 1;
  }
 
- #sceneOption {
+ #scenesOption {
      flex: 3;
  }
-
- #keyOption:hover, #sceneOption:hover {
-     cursor: pointer;
- }
-
- #keyContainer {
-     margin: auto;
-     padding-bottom: 10px;
+ 
+ .menuOption {
      position: relative;
  }
 
- #key {
-     border-color: red;
- }
-
- .checks {
-     position: fixed;
-     height: 25px;
-     width: 25px;
- }
-
- #menuScenes {
-    display: flex;
-    justify-content: space-around;
-    padding-bottom: 10px;
- }
-
- #menuScenes > li {
+.menuLabel {
      display: flex;
      justify-content: center;
      align-items: center;
+     padding: 12px;
  }
 
- #menuScenes img {
+ .menuLabel:hover, .menuDropdown li:hover {
+    cursor: pointer;
+ }
+
+ .menuDropdown {
+     display: none;
+     position: absolute;
+     width: 100%;
+     height: 326px;
+     background-color: black;
+     justify-content: space-around;
+     align-items: center;
+ }
+
+ #menu img {
      max-width: 553px;
      max-height: 319px;
  }
 
- .hidden {
-    visibility: hidden;
+ #scenes li img:hover {
+     border-bottom: solid;
+     border-top: solid;
+     border-width: 1px;
  }
 
- .visible {
-     visibility: visible;
+.checks {
+     position: absolute;
+     height: 25px;
+     width: 25px;
+ }
+
+ .foundCircles {
+     position: absolute;
  }
 
  #spotted {
@@ -109,7 +98,7 @@
     position: absolute;
  }
 
- #circle {
+ .circles {
     height: 100px;
     width: 100px;
     border: solid;
@@ -120,7 +109,7 @@
     margin-right: 10px;
  }
 
- #circle > div {
+ .circles > div {
      height: 92px;
      width: 92px;
      border: solid;
@@ -129,7 +118,7 @@
      border-radius: 50% 50%;
  }
  
- #circle > div > div {
+ .circles > div > div {
      height: 86px;
      width: 86px;
      border: solid;
@@ -152,7 +141,7 @@
      color: red;
  }
 
- #characters {
+ #targets {
      display: none;
      background-color: black;
      color: white;
@@ -161,7 +150,7 @@
      column-count: 2;
  }
 
- #characters li:hover {
+ #targets li:hover {
     cursor: pointer;
     color: red;
  }
